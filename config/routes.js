@@ -80,7 +80,7 @@ module.exports = function(app, passport, auth, user) {
     
     // Programs
 	var programs = require('../app/controllers/programs');
-    app.get('/programs', programs.all);
+    app.get('/programs', user.can('delete programs'), programs.all);
     app.post('/programs', programs.create);
     app.get('/programs/:programId', programs.show);
     app.put('/programs/:programId', programs.update);

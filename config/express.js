@@ -62,7 +62,10 @@ module.exports = function(app, config, passport, user) {
 
         // user roles
         // -----
+        // mode to after router when issue https://github.com/ForbesLindesay/connect-roles/issues/21
+        // is fixed
         app.use(user);
+        
 
         //routes should be at the last
         app.use(app.router);
@@ -92,6 +95,8 @@ module.exports = function(app, config, passport, user) {
                 error: 'Not found'
             });
         });
+        
+        
 
     });
 };

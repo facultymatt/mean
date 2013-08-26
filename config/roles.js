@@ -13,6 +13,9 @@ module.exports = function(app, config, passport, user) {
           return false;
       }
       
+      console.log('USER IS AUTH ' + req.user.isAuthenticated);
+      console.log('USER IS ROLE ' + req.user.role);
+      
       // Here we need to check for user, which is what roles uses to store its functions
       // and also what passport uses to store a logged in user.
       // we can remove this check if we move roles to after the router is called. 
