@@ -53,6 +53,7 @@ module.exports = function(app, passport, auth) {
 
     //Finish with setting up the userId param
     app.param('userId', users.user);
+    
 
     //Article Routes
     var articles = require('../app/controllers/articles');
@@ -73,6 +74,20 @@ module.exports = function(app, passport, auth) {
 
     //Finish with setting up the articleId param
     app.param('vendorId', vendors.vendor);
+    
+    
+    // Programs
+	var programs = require('../app/controllers/programs');
+    app.get('/programs', programs.all);
+    app.post('/programs', programs.create);
+    app.get('/programs/:programId', programs.show);
+    app.put('/programs/:programId', auth.requiresLogin, programs.update);
+    app.del('/programs/:programId', auth.requiresLogin, programs.destroy);
+
+    //Finish with setting up the articleId param
+    app.param('programId', programs.program);
+    
+    
 
     //Home route
     var index = require('../app/controllers/index');
