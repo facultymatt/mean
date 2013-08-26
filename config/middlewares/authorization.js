@@ -2,10 +2,23 @@
  * Generic require login routing middleware
  */
 exports.requiresLogin = function(req, res, next) {
-    if (!req.isAuthenticated()) {
-        return res.redirect('/login');
+/*
+    console.log('CHECKING IF request is authenticated');
+    console.log(req.roles);
+    
+    if (req.roles && !req.roles.isAuthenticated) {
+        
+        var responseObj = {
+            meta: {
+                status: 'error',
+                message: 'Not authorized, please login to continue.'
+            }
+        }
+        
+        return res.json(responseObj, 401);
     }
     next();
+*/
 };
 
 /**

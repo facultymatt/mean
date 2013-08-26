@@ -6,7 +6,7 @@ var express = require('express'),
     flash = require('connect-flash'),
     helpers = require('view-helpers');
 
-module.exports = function(app, config, passport) {
+module.exports = function(app, config, passport, user) {
     app.set('showStackError', true);
 
     //Should be placed before express.static
@@ -60,8 +60,16 @@ module.exports = function(app, config, passport) {
         app.use(passport.initialize());
         app.use(passport.session());
 
+        // user roles
+        // -----
+        app.use(user);
+
         //routes should be at the last
         app.use(app.router);
+        
+        
+        
+        
 
         //Assume "not found" in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
         app.use(function(err, req, res, next) {

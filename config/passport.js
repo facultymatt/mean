@@ -5,6 +5,8 @@ var mongoose = require('mongoose'),
     GitHubStrategy = require('passport-github').Strategy,
     GoogleStrategy = require('passport-google-oauth').Strategy,
     User = mongoose.model('User');
+    
+var BasicStrategy = require('passport-http').BasicStrategy;
 
 
 module.exports = function(passport, config) {
@@ -20,6 +22,18 @@ module.exports = function(passport, config) {
             done(err, user);
         });
     });
+    
+    passport.use(new BasicStrategy(
+        function(username, password, done) {
+            User.findOne({ username: username }, function (err, user) {
+              if (err) { return done(err); }              
+              if (!user) { return done(null, false); }
+              if (!user.authenticate(password)) { return done(null, false); }
+              return done(null, user);
+            });
+        }
+    ));
+    
 
     //Use local strategy
     passport.use(new LocalStrategy({

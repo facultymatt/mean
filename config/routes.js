@@ -1,7 +1,8 @@
 var async = require('async');
 
-module.exports = function(app, passport, auth) {
-    //User Routes
+module.exports = function(app, passport, auth, user) {
+   /*
+ //User Routes
     var users = require('../app/controllers/users');
     app.get('/signin', users.signin);
     app.get('/signup', users.signup);
@@ -53,6 +54,7 @@ module.exports = function(app, passport, auth) {
 
     //Finish with setting up the userId param
     app.param('userId', users.user);
+*/
     
 
     //Article Routes
@@ -81,12 +83,27 @@ module.exports = function(app, passport, auth) {
     app.get('/programs', programs.all);
     app.post('/programs', programs.create);
     app.get('/programs/:programId', programs.show);
-    app.put('/programs/:programId', auth.requiresLogin, programs.update);
-    app.del('/programs/:programId', auth.requiresLogin, programs.destroy);
+    app.put('/programs/:programId', programs.update);
+    app.del('/programs/:programId', user.can('delete programs'), programs.destroy);
 
     //Finish with setting up the articleId param
     app.param('programId', programs.program);
     
+    app.get('/private', user.can('view all programs'), function(req, res) {
+        res.send('OK PRIVATE...!');
+    });
+    
+    app.get('/fancy',
+      // Authenticate using HTTP Basic credentials, with session support disabled.
+      passport.authenticate('local'),
+       function(req, res){
+        res.json({ username: req.user.username, email: req.user.email });
+    });
+    
+    app.get('/out', function(req, res) {
+        req.logout();
+        res.json({meta: {message: 'success, you are now logged out!'}});
+    });
     
 
     //Home route
