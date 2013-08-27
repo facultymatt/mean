@@ -12,7 +12,6 @@ var mongoose = require('mongoose'),
  * Find quote by id
  */
 exports.quote = function(req, res, next, id) {
-
     Quote.load(id, function(err, quote) {
         if (err) return next(err);
         if (!quote) return next(new Error('Failed to load quote ' + id));
@@ -20,6 +19,7 @@ exports.quote = function(req, res, next, id) {
         next();
     });
 };
+
 
 /**
  * Create a quote
@@ -30,6 +30,7 @@ exports.create = function(req, res) {
     quote.save();
     res.jsonp(quote);
 };
+
 
 /**
  * Update a quote
@@ -43,6 +44,7 @@ exports.update = function(req, res) {
         res.jsonp(quote);
     });
 };
+
 
 /**
  * Delete an quote
@@ -61,12 +63,14 @@ exports.destroy = function(req, res) {
     });
 };
 
+
 /**
  * Show an quote
  */
 exports.show = function(req, res) {
     res.jsonp(req.quote);
 };
+
 
 /**
  * List of Quotes
@@ -84,12 +88,16 @@ exports.all = function(req, res) {
 };
 
 
-
 /**
- * List of Quotes
+ * Get quotes for a sales rep. 
+ *
+ * @note This can be used to limit quotes when a user is logged in, or 
+ *       it can be used for a resource/:id/children instance (if we modify the way we get user id)
+ *
  */
 exports.getAllForSalesRep = function(req, res) {
  
+    // First get all vendors for this sales rep.
     Vendor
     .where('salesRep')
     .equals(req.user._id)
@@ -100,8 +108,10 @@ exports.getAllForSalesRep = function(req, res) {
             res.send(500);
         } else {
     
-            // extrct the vendor ids from the results
+            // extract the vendor ids from the results
             // this will be all vendors the user is associated with NOW! 
+            // @note we don't store user ids with the quotes... because if at any point the vendor gets
+            // a new sales rep, things would be out of sync. 
             var vendorIds = [];
             _.each(vendors, function(item) {
                  vendorIds.push(item._id);
@@ -120,9 +130,7 @@ exports.getAllForSalesRep = function(req, res) {
         .sort('-created')
         .exec(function(err, quotes) {
             if (err) {
-                res.render('error', {
-                    status: 500
-                });
+                 res.send(500);
             } else {
                 res.json({
                     
@@ -134,36 +142,5 @@ exports.getAllForSalesRep = function(req, res) {
                 });
             }
         });
-        
     }
-    
-    
-/*
-var o = {};
-o.map = function () { emit(this.salesRep, 1) }
-o.reduce = function (salesRep, vendor) { 
-    return vendor;
-}
-Vendor.mapReduce(o, function (err, results) {
-  console.log(results);
-})
-*/
-    
-/*
-    
-var o = {};
-o.map = function () { emit(this.salesRep, 1) }
-o.reduce = function (k, vals) { return vals.length }
-Vendor.mapReduce(o, function (err, results) {
-  console.log(results)
-})  
-*/  
-    
-    
-/*
-    
-    
-*/
 };
-
-
