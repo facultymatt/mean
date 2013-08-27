@@ -1,5 +1,9 @@
-
-
+/**
+ *
+ * ROLES defined
+ *
+ *
+ */
 module.exports = function(app, config, passport, user) {
 
     /**
@@ -7,8 +11,7 @@ module.exports = function(app, config, passport, user) {
     *
     */
     user.use(function (req) {
-      console.log('CATCH ALL...');
-      console.log(req.user);
+     
       if(!req.user) {
           return false;
       }
