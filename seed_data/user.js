@@ -1,6 +1,3 @@
-var mongo = require('mongodb');
-var BSON = mongo.BSONPure;
-
 exports.seed = function() {
     return data;
 };
@@ -9,7 +6,7 @@ exports.seed = function() {
 var data = [
 {
     // 1
-    _id: new BSON.ObjectID('51e71518ed32080ffc000008'),
+    _id: '51e71518ed32080ffc000008',
     name: {
         first: 'Brian',
         last: 'Walsh'
@@ -23,11 +20,11 @@ var data = [
         original: 'https://www.filepicker.io/api/file/Lzt97D7RaaMqubCiiRUw'
     },
     status: 'Active',
-    groups: [1]
+    role: 'admin'
 },
 {
     // 2
-    _id: new BSON.ObjectID('51e71518ed32080ffc000009'),
+    _id: '51e71518ed32080ffc000009',
     name: {
         first: 'Stu',
         last: 'Sable'
@@ -41,11 +38,11 @@ var data = [
         original: 'https://www.filepicker.io/api/file/5Ur9llgFTkSpz1PlV4g9'
     },
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 },
 {
     // 3
-    _id: new BSON.ObjectID('51e71518ed32080ffc000010'),
+    _id: '51e71518ed32080ffc000010',
     name: {
         first: 'Joseph',
         last: 'Campbell'
@@ -59,11 +56,11 @@ var data = [
     username: 'jcampbell',
     password: 'jcampbell',
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 },
 {
     // 4
-    _id: new BSON.ObjectID('51e71518ed32080ffc000011'),
+    _id: '51e71518ed32080ffc000011',
     name: {
         first: 'Chris',
         last: 'Barraro'
@@ -77,11 +74,11 @@ var data = [
     username: 'cbarraro',
     password: 'cbarraro',
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 },
 {
     // 5
-    _id: new BSON.ObjectID('51e71518ed32080ffc000012'),
+    _id: '51e71518ed32080ffc000012',
     name: {
         first: 'Brian',
         last: 'McMahon'
@@ -95,11 +92,11 @@ var data = [
     username: 'bmcmahon',
     password: 'bmcmahon',
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 },
 {
     // 6
-    _id: new BSON.ObjectID('51e71518ed32080ffc000013'),
+    _id: '51e71518ed32080ffc000013',
     name: {
         first: 'Nicole',
         last: 'Ara'
@@ -113,11 +110,11 @@ var data = [
     username: 'nara',
     password: 'nara',
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 },
 {
     // 7
-    _id: new BSON.ObjectID('51e71518ed32080ffc000014'),
+    _id: '51e71518ed32080ffc000014',
     name: {
         first: 'Cherie',
         last: 'Cole'
@@ -131,11 +128,11 @@ var data = [
     username: 'ccole',
     password: 'ccole',
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 },
 {
     // 8
-    _id: new BSON.ObjectID('51e71518ed32080ffc000015'),
+    _id: '51e71518ed32080ffc000015',
     name: {
         first: 'Joseph',
         last: 'Fortune'
@@ -149,11 +146,11 @@ var data = [
     username: 'jfortune',
     password: 'jfortune',
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 },
 {
     // 9
-    _id: new BSON.ObjectID('51e71518ed32080ffc000016'),
+    _id: '51e71518ed32080ffc000016',
     name: {
         first: 'Jennifer',
         last: 'DeLong'
@@ -167,5 +164,5 @@ var data = [
     username: 'jdelong',
     password: 'jdelong',
     status: 'Active',
-    groups: [2]
+    role: 'salesRep'
 }];

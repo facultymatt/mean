@@ -1,13 +1,10 @@
-var mongo = require('mongodb');
-var BSON = mongo.BSONPure;
-
 exports.seed = function() {
     return data;
 };
 
 // dummy data
 var data = [{
-    _id: new BSON.ObjectID('51e71518ed32080ffc000021'),
+    _id: '51e71518ed32080ffc000021',
     name: 'Application 1',
     status: 'Open',
     quoteId: '51e71518ed32080ffc000018',
@@ -52,7 +49,7 @@ var data = [{
     notes: {}
 },
 {
-    _id: new BSON.ObjectID('51e71518ed32080ffc000022'),
+    _id: '51e71518ed32080ffc000022',
     name: 'Application 2',
     status: 'Open',
     quoteId: '51e71518ed32080ffc000018',

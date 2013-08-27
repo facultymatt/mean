@@ -1,12 +1,9 @@
-var mongo = require('mongodb');
-var BSON = mongo.BSONPure;
-
 exports.seed = function() {
     return data;
 };
 
 var data = [{
-    _id: new BSON.ObjectID('51e71518ed32080ffc000006'),
+    _id: '51e71518ed32080ffc000006',
     name: 'Program numero uno, a Yearly plan',
     rateSheet: {
         termPeriod: 'Year',
@@ -41,7 +38,7 @@ var data = [{
         }
 },
 {
-    _id: new BSON.ObjectID('51e71518ed32080ffc000007'),
+    _id: '51e71518ed32080ffc000007',
     name: 'Program numero dos, a Yearly plan',
     rateSheet: {
         termPeriod: 'Year',
@@ -76,7 +73,7 @@ var data = [{
         }
 },
 {
-    _id: new BSON.ObjectID('51e71518ed32080ffc000050'),
+    _id: '51e71518ed32080ffc000050',
     name: 'Program numero tres, a Yearly plan',
     rateSheet: {
         termPeriod: 'Year',
@@ -111,7 +108,7 @@ var data = [{
         }
 },
 {
-    _id: new BSON.ObjectID('51e71518ed32080ffc000051'),
+    _id: '51e71518ed32080ffc000051',
     name: 'Program numero quatro, a Yearly plan',
     rateSheet: {
         termPeriod: 'Year',
