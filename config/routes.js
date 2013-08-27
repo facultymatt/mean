@@ -103,7 +103,21 @@ module.exports = function(app, passport, auth, user) {
 	* -------------------------
 	*/
 	var vendors = require('../app/controllers/vendors');
-    app.get('/vendors', vendors.all);
+    //app.get('/vendors', user.is('admin'), vendors.all);
+    // show all vendors, or just users vendors based on role
+    app.get('/vendors', user.is('logged in'), function(req, res, next) {
+            
+        if(req.user.role === 'admin') {
+            vendors.all(req, res, next);
+        } else if(req.user.role === 'salesRep') {
+            vendors.allForSalesRep(req, res, next);
+        } else {
+            res.send('Not found', 404);
+        }
+        
+    });
+    
+    app.use('/vendors', user.is('not admin'), vendors.all);
     app.post('/vendors', user.is('admin'), vendors.create);
     app.get('/vendors/:vendorId', vendors.show);
     app.put('/vendors/:vendorId', user.is('admin'), vendors.update);
