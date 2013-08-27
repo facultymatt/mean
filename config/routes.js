@@ -56,31 +56,80 @@ module.exports = function(app, passport, auth, user) {
     app.param('userId', users.user);
 */
     
+    /**
+	* USERS routes
+	* -------------------------
+	*/
+	var users = require('../app/controllers/users');
+    app.get('/users', user.is('admin'), users.all);
+    app.post('/users', user.is('admin'), users.create);
+    app.get('/users/:userId', user.can('view user'), users.show);
+    app.put('/users/:userId', user.can('edit user'), users.update);
+    app.del('/users/:userId', user.can('delete user'), users.destroy);
+
+    app.param('users', users.user);
+    
+    
+    /**
+	* QUOTES routes
+	* -------------------------
+	*/
+	var quotes = require('../app/controllers/quotes');
+    app.get('/quotes', user.is('logged in'), quotes.all);
+    app.post('/quotes', quotes.create);
+    app.get('/quotes/:quoteId', quotes.show);
+    app.put('/quotes/:quoteId', quotes.update);
+    app.del('/quotes/:quoteId', user.is('admin'), quotes.destroy);
+
+    app.param('quoteId', quotes.quote);
+    
+    
+    /**
+	* APPLCIATIONS routes
+	* -------------------------
+	*/
+	var applications = require('../app/controllers/applications');
+    app.get('/applications', user.is('admin'), user.is('salesRep'), user.is('vendor'), applications.all);
+    app.post('/applications', applications.create);
+    app.get('/applications/:applicationId', applications.show);
+    app.put('/applications/:applicationId', applications.update);
+    app.del('/applications/:applicationId', user.is('admin'), applications.destroy);
+
+    app.param('applicationId', applications.application);
 
 
-	// vendors
+	/**
+	* VENDORS routes
+	* -------------------------
+	*/
 	var vendors = require('../app/controllers/vendors');
     app.get('/vendors', vendors.all);
-    app.post('/vendors', vendors.create);
+    app.post('/vendors', user.is('admin'), vendors.create);
     app.get('/vendors/:vendorId', vendors.show);
-    app.put('/vendors/:vendorId', auth.requiresLogin, vendors.update);
-    app.del('/vendors/:vendorId', auth.requiresLogin, vendors.destroy);
+    app.put('/vendors/:vendorId', user.is('admin'), vendors.update);
+    app.del('/vendors/:vendorId', user.is('admin'), vendors.destroy);
 
-    //Finish with setting up the articleId param
     app.param('vendorId', vendors.vendor);
     
     
-    // Programs
+    /**
+	* PROGRAMS routes
+	* -------------------------
+	*/
 	var programs = require('../app/controllers/programs');
     app.get('/programs', user.is('admin'), programs.all);
-    app.post('/programs', user.is('logged in'), programs.create);
+    app.post('/programs', user.is('admin'), programs.create);
     app.get('/programs/:programId', user.is('admin'), user.can('edit programs'), programs.show);
     app.put('/programs/:programId', user.is('admin'), programs.update);
     app.del('/programs/:programId', user.is('admin'), user.can('delete programs'), programs.destroy);
 
-    //Finish with setting up the articleId param
     app.param('programId', programs.program);
     
+    
+    /**
+	* DEV / TESTING routes
+	* -------------------------
+	*/
     app.get('/private', user.can('view all programs'), function(req, res) {
         res.send('OK PRIVATE...!');
     });
@@ -97,9 +146,4 @@ module.exports = function(app, passport, auth, user) {
         res.json({meta: {message: 'success, you are now logged out!'}});
     });
     
-
-    //Home route
-    var index = require('../app/controllers/index');
-    app.get('/', index.render);
-
 };
