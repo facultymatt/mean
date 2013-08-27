@@ -102,7 +102,20 @@ module.exports = function(app, passport, auth, user) {
 	* -------------------------
 	*/
 	var applications = require('../app/controllers/applications');
-    app.get('/applications', user.is('admin'), user.is('salesRep'), user.is('vendor'), applications.all);
+    //app.get('/applications', user.is('admin'), user.is('salesRep'), user.is('vendor'), applications.all);
+    
+    app.get('/applications', user.is('logged in'), function(req, res, next) {
+            
+        if(req.user.role === 'admin') {
+            applications.all(req, res, next);
+        } else if(req.user.role === 'salesRep') {
+            applications.getAllForSalesRep(req, res, next);
+        } else {
+            res.send('Not found', 404);
+        }
+        
+    });
+    
     app.post('/applications', applications.create);
     app.get('/applications/:applicationId', applications.show);
     app.put('/applications/:applicationId', applications.update);
@@ -144,7 +157,7 @@ module.exports = function(app, passport, auth, user) {
 	* -------------------------
 	*/
 	var programs = require('../app/controllers/programs');
-    app.get('/programs', user.is('admin'), programs.all);
+    app.get('/programs', user.is('logged in'), programs.all);
     app.post('/programs', user.is('admin'), programs.create);
     app.get('/programs/:programId', user.is('admin'), user.can('edit programs'), programs.show);
     app.put('/programs/:programId', user.is('admin'), programs.update);
