@@ -69,6 +69,31 @@ exports.show = function(req, res) {
     res.jsonp(req.vendor);
 };
 
+
+exports.allForSalesRep = function(req, res) {
+    
+    var userId = req.user._id;
+    
+    Vendor
+        .where('salesRep')
+        .equals(userId)
+        .find()
+        .sort('-created')
+        .populate('programIds')
+        .populate('salesRep')
+        .exec(function(err, vendors) {
+        if (err) {
+            res.render('error', {
+                status: 500
+            });
+        } else {
+            res.jsonp(vendors);
+        }
+    });
+    
+};
+
+
 /**
  * List of Vendors
  */
