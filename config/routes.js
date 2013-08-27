@@ -75,7 +75,20 @@ module.exports = function(app, passport, auth, user) {
 	* -------------------------
 	*/
 	var quotes = require('../app/controllers/quotes');
-    app.get('/quotes', user.is('logged in'), quotes.all);
+    //app.get('/quotes', user.is('logged in'), quotes.all);
+    
+    app.get('/quotes', user.is('logged in'), function(req, res, next) {
+            
+        if(req.user.role === 'admin') {
+            quotes.all(req, res, next);
+        } else if(req.user.role === 'salesRep') {
+            quotes.getAllForSalesRep(req, res, next);
+        } else {
+            res.send('Not found', 404);
+        }
+        
+    });
+    
     app.post('/quotes', quotes.create);
     app.get('/quotes/:quoteId', quotes.show);
     app.put('/quotes/:quoteId', quotes.update);

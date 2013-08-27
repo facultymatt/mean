@@ -4,6 +4,7 @@
 var mongoose = require('mongoose'),
     async = require('async'),
     Quote = mongoose.model('Quote'),
+    Vendor = mongoose.model('Vendor'),
     _ = require('underscore');
 
 
@@ -83,5 +84,86 @@ exports.all = function(req, res) {
 };
 
 
+
+/**
+ * List of Quotes
+ */
+exports.getAllForSalesRep = function(req, res) {
+ 
+    Vendor
+    .where('salesRep')
+    .equals(req.user._id)
+    .find()
+    .select('_id')
+    .exec(function(err, vendors) {
+        if (err) {
+            res.send(500);
+        } else {
+    
+            // extrct the vendor ids from the results
+            // this will be all vendors the user is associated with NOW! 
+            var vendorIds = [];
+            _.each(vendors, function(item) {
+                 vendorIds.push(item._id);
+            });
+            getQuotes(vendorIds);
+    
+        }
+    });
+    
+    var getQuotes = function(vendorIds) {
+        
+        Quote
+        .find()
+        .where('vendorId')
+        .in(vendorIds)
+        .sort('-created')
+        .exec(function(err, quotes) {
+            if (err) {
+                res.render('error', {
+                    status: 500
+                });
+            } else {
+                res.json({
+                    
+                    meta: {
+                        message: 'Getting quotes for salesRep ' + req.user.fullName  
+                    },
+                    results: quotes
+                    
+                });
+            }
+        });
+        
+    }
+    
+    
+/*
+var o = {};
+o.map = function () { emit(this.salesRep, 1) }
+o.reduce = function (salesRep, vendor) { 
+    return vendor;
+}
+Vendor.mapReduce(o, function (err, results) {
+  console.log(results);
+})
+*/
+    
+/*
+    
+var o = {};
+o.map = function () { emit(this.salesRep, 1) }
+o.reduce = function (k, vals) { return vals.length }
+Vendor.mapReduce(o, function (err, results) {
+  console.log(results)
+})  
+*/  
+    
+    
+/*
+    
+    
+*/
+};
 
 
