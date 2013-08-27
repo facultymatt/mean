@@ -57,14 +57,6 @@ module.exports = function(app, passport, auth, user) {
 */
     
 
-    //Article Routes
-    var articles = require('../app/controllers/articles');
-    app.get('/articles', articles.all);
-    app.post('/articles', articles.create);
-    app.get('/articles/:articleId', articles.show);
-    app.put('/articles/:articleId', auth.requiresLogin, articles.update);
-    app.del('/articles/:articleId', auth.requiresLogin, user.can('edit'), articles.destroy);
-
 
 	// vendors
 	var vendors = require('../app/controllers/vendors');
@@ -80,7 +72,7 @@ module.exports = function(app, passport, auth, user) {
     
     // Programs
 	var programs = require('../app/controllers/programs');
-    app.get('/programs', user.is('logged in'), programs.all);
+    app.get('/programs', user.is('admin'), programs.all);
     app.post('/programs', user.is('logged in'), programs.create);
     app.get('/programs/:programId', user.is('admin'), user.can('edit programs'), programs.show);
     app.put('/programs/:programId', user.is('admin'), programs.update);
