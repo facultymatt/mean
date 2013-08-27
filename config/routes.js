@@ -62,8 +62,8 @@ module.exports = function(app, passport, auth, user) {
     app.get('/articles', articles.all);
     app.post('/articles', articles.create);
     app.get('/articles/:articleId', articles.show);
-    app.put('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.update);
-    app.del('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.destroy);
+    app.put('/articles/:articleId', auth.requiresLogin, articles.update);
+    app.del('/articles/:articleId', auth.requiresLogin, user.can('edit'), articles.destroy);
 
 
 	// vendors
@@ -80,11 +80,11 @@ module.exports = function(app, passport, auth, user) {
     
     // Programs
 	var programs = require('../app/controllers/programs');
-    app.get('/programs', user.can('delete programs'), programs.all);
-    app.post('/programs', programs.create);
-    app.get('/programs/:programId', programs.show);
-    app.put('/programs/:programId', programs.update);
-    app.del('/programs/:programId', user.can('delete programs'), programs.destroy);
+    app.get('/programs', user.is('logged in'), programs.all);
+    app.post('/programs', user.is('logged in'), programs.create);
+    app.get('/programs/:programId', user.is('admin'), user.can('edit programs'), programs.show);
+    app.put('/programs/:programId', user.is('admin'), programs.update);
+    app.del('/programs/:programId', user.is('admin'), user.can('delete programs'), programs.destroy);
 
     //Finish with setting up the articleId param
     app.param('programId', programs.program);

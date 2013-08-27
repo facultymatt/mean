@@ -11,24 +11,29 @@ module.exports = function(app, config, passport, user) {
     *
     */
     user.use(function (req) {
-     
-      if(!req.user) {
-          return false;
-      }
-      
-      console.log('USER IS AUTH ' + req.user.isAuthenticated);
-      console.log('USER IS ROLE ' + req.user.role);
-      
-      // Here we need to check for user, which is what roles uses to store its functions
-      // and also what passport uses to store a logged in user.
-      // we can remove this check if we move roles to after the router is called. 
-      // however then we get an error when there is no user defined. 
-      if(req.user && !req.user.isAuthenticated && !req.user._id) {
-          return false;
-      }
-      
       if (req.user && req.user.role === 'admin') {
         return true;
+      }
+    });
+    
+    /**
+    * Check for logged in users
+    *
+    */
+    user.use('logged in', function (req) {
+      if(req.user && req.user.id) return true;
+    });
+    
+    /**
+    * Another example of admin checking, this would pass user.is('admin')
+    *
+    */
+    user.use('admin', function (req) {
+      console.log('user is ... ' + req.user.role);
+      
+      if(req.user && req.user.role) {
+          console.log('user is ... ' + req.user.role);
+          return req.user.role;
       }
     });
     
@@ -37,8 +42,36 @@ module.exports = function(app, config, passport, user) {
     * Vendors can access private pages
     *
     */
-    user.use('access private page', function (req) {
-        if (req.user && req.user.role === 'vendor') {
+    user.use('CRUD', function (req) {
+        
+        var role = req.user.role;
+
+        if (req.user && role === 'vendor') {
+            return true;
+        }
+        
+    });
+    
+    /**
+    * Vendors can access private pages
+    *
+    */
+    user.use(function (req, action) {
+        return action === 'view all programs';
+    });
+    
+    /**
+    * Vendors can access private pages
+    *
+    */
+    user.use('manage this program', function (req) {
+        
+        var roles = ['vendor'];
+        
+        
+        
+        
+        if (req.user && req.user.role === 'admin') {
             return true;
         }
     });
@@ -47,9 +80,23 @@ module.exports = function(app, config, passport, user) {
     * Vendors can access private pages
     *
     */
-    user.use('view all programs', function (req) {
-        return true;
-    })
+    user.use('manage this vendor', function (req) {
+        if (req.user && req.user.role === 'vendor' && vendor.id === req.vendor.id) {
+            return true;
+        }
+    });
+    
+    
+    /**
+    * Edit programs
+    *
+    */
+    user.use('edit this program', function (req) {
+        if (req.user && req.user.role === 'vendor') {
+            return true;
+        }
+    });
+    
     
 
     
@@ -59,6 +106,7 @@ module.exports = function(app, config, passport, user) {
     */
     user.setFailureHandler(function (req, res, action){
       var accept = req.headers.accept || '';
+      
       res.status(403);
       if (~accept.indexOf('html')) {
         res.render('access-denied', {action: action});

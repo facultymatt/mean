@@ -71,7 +71,7 @@ exports.show = function(req, res) {
  * List of Vendors
  */
 exports.all = function(req, res) {
-    Vendor.find().sort('-created').exec(function(err, vendors) {
+    Vendor.find().sort('-created').populate('programIds').exec(function(err, vendors) {
         if (err) {
             res.render('error', {
                 status: 500
