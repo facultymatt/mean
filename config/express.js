@@ -16,6 +16,28 @@ module.exports = function(app, config, passport, user) {
         },
         level: 9
     }));
+    
+    
+    /**
+    * Extend res with custom response formats, that we can use in our controllers. 
+    *
+    */
+    app.use(function(req, res, next) {
+        res.ok = function(status) {
+            res.json(status, 200);
+        }
+        
+        res.failure = function(message, code) {
+            var code = code || 500;
+            
+            res.json({meta: { 
+                message: message,
+                code: code
+            }}, code);
+        }
+        
+        next();
+    });
 
     //Setting the fav icon and static folder
     app.use(express.favicon());
