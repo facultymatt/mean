@@ -14,7 +14,9 @@ exports.vendor = function(req, res, next, id) {
 
     Vendor.load(id, function(err, vendor) {
         if (err) return next(err);
-        if (!vendor) return next(new Error('Failed to load vendor ' + id));
+        if (!vendor) {
+            return res.json('No results', 404);
+        }
         req.vendor = vendor;
         next();
     });
