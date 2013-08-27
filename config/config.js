@@ -3,7 +3,7 @@ var path = require('path'),
 
 module.exports = {
     development: {
-        db: 'mongodb://localhost/mean-dev',
+        db: 'mongodb://localhost/marlindb',
         root: rootPath,
         app: {
             name: 'MEAN - A Modern Stack - Development'
