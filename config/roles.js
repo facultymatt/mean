@@ -7,11 +7,23 @@
 module.exports = function(app, config, passport, user) {
 
     /**
+    * Check for 
+    *
+    */
+    user.use(function (req) {
+      if (!req.user) {
+        console.log('req.user is empty!!!');
+        return false;
+      }
+    });
+
+    
+    /**
     * Admin can access all pages!
     *
     */
     user.use(function (req) {
-      if (req.user && req.user.role === 'admin') {
+      if (req.user.role === 'admin') {
         return true;
       }
     });
@@ -21,7 +33,7 @@ module.exports = function(app, config, passport, user) {
     *
     */
     user.use('logged in', function (req) {
-      if(req.user && req.user.id) return true;
+      if(req.user.id) return true;
     });
     
     /**
@@ -31,7 +43,7 @@ module.exports = function(app, config, passport, user) {
     user.use('admin', function (req) {
       console.log('user is ... ' + req.user.role);
       
-      if(req.user && req.user.role) {
+      if(req.user.role) {
           console.log('user is ... ' + req.user.role);
           return req.user.role;
       }
@@ -42,17 +54,13 @@ module.exports = function(app, config, passport, user) {
     * View a specific user... will have already passed the admin check
     * here we only check if the user id matches the requested user id
     *
+    * We check if requesting user id matches the session user id
+    * 
     */
     user.use('view user', function (req) {
-        
-        console.log('attempting to view user ' + req.params.userId);
-        console.log('session user id is      ' + req.user._id);
-        
-        if (req.user && req.user._id == req.params.userId) {
-            console.log('GOOD TO GO!');
+        if (req.user._id == req.params.userId) {
             return true;
         }
-        
     });
     
     
