@@ -101,3 +101,53 @@ exports.user = function(req, res, next, id) {
             next();
         });
 };
+
+
+
+/**
+ * Delete an user
+ */
+exports.destroy = function(req, res) {
+    var user = req.user;
+
+    user.remove(function(err) {
+        if (err) {
+            res.render('error', {
+                status: 500
+            });
+        } else {
+            res.jsonp(user);
+        }
+    });
+};
+
+/**
+ * List of Users
+ */
+exports.all = function(req, res) {
+    User.find().sort('-created').populate('programIds').exec(function(err, users) {
+        if (err) {
+            res.render('error', {
+                status: 500
+            });
+        } else {
+            res.jsonp(users);
+        }
+    });
+};
+
+/**
+ * Update a vendor
+ */
+exports.update = function(req, res) {
+    var user = req.user;
+
+    user = _.extend(user, req.body);
+
+    user.save(function(err) {
+        res.jsonp(user);
+    });
+};
+
+
+
