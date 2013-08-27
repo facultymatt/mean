@@ -67,7 +67,7 @@ module.exports = function(app, passport, auth, user) {
     app.put('/users/:userId', user.can('edit user'), users.update);
     app.del('/users/:userId', user.can('delete user'), users.destroy);
 
-    app.param('users', users.user);
+    app.param('userId', users.user);
     
     
     /**

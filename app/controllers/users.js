@@ -50,17 +50,17 @@ exports.session = function(req, res) {
  * Create user
  */
 exports.create = function(req, res) {
-    var user = new User(req.body);
+    var theUser = new User(req.body);
 
-    user.provider = 'local';
-    user.save(function(err) {
+    theUser.provider = 'local';
+    theUser.save(function(err) {
         if (err) {
             return res.render('users/signup', {
                 errors: err.errors,
-                user: user
+                user: theUser
             });
         }
-        req.logIn(user, function(err) {
+        req.logIn(theUser, function(err) {
             if (err) return next(err);
             return res.redirect('/');
         });
@@ -70,6 +70,7 @@ exports.create = function(req, res) {
 /**
  *  Show profile
  */
+/*
 exports.show = function(req, res) {
     var user = req.profile;
 
@@ -78,12 +79,23 @@ exports.show = function(req, res) {
         user: user
     });
 };
+*/
+
+/**
+ * Show an application
+ */
+exports.show = function(req, res) {
+    
+    
+    
+    res.jsonp(req.theUser);
+};
 
 /**
  * Send User
  */
 exports.me = function(req, res) {
-    res.jsonp(req.user || null);
+    res.jsonp(req.theUser || null);
 };
 
 /**
@@ -94,10 +106,10 @@ exports.user = function(req, res, next, id) {
         .findOne({
             _id: id
         })
-        .exec(function(err, user) {
+        .exec(function(err, theUser) {
             if (err) return next(err);
-            if (!user) return next(new Error('Failed to load User ' + id));
-            req.profile = user;
+            if (!theUser) return next(new Error('Failed to load User ' + id));
+            req.theUser = theUser;
             next();
         });
 };
@@ -108,15 +120,15 @@ exports.user = function(req, res, next, id) {
  * Delete an user
  */
 exports.destroy = function(req, res) {
-    var user = req.user;
+    var theUser = req.theUser;
 
-    user.remove(function(err) {
+    theUser.remove(function(err) {
         if (err) {
             res.render('error', {
                 status: 500
             });
         } else {
-            res.jsonp(user);
+            res.jsonp(theUser);
         }
     });
 };
@@ -140,12 +152,12 @@ exports.all = function(req, res) {
  * Update a vendor
  */
 exports.update = function(req, res) {
-    var user = req.user;
+    var theUser = req.theUser;
 
-    user = _.extend(user, req.body);
+    theUser = _.extend(theUser, req.body);
 
-    user.save(function(err) {
-        res.jsonp(user);
+    theUser.save(function(err) {
+        res.jsonp(theUser);
     });
 };
 

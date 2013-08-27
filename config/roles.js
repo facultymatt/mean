@@ -39,6 +39,25 @@ module.exports = function(app, config, passport, user) {
     
     
     /**
+    * View a specific user... will have already passed the admin check
+    * here we only check if the user id matches the requested user id
+    *
+    */
+    user.use('view user', function (req) {
+        
+        console.log('attempting to view user ' + req.params.userId);
+        console.log('session user id is      ' + req.user._id);
+        
+        if (req.user && req.user._id == req.params.userId) {
+            console.log('GOOD TO GO!');
+            return true;
+        }
+        
+    });
+    
+    
+    
+    /**
     * Vendors can access private pages
     *
     */
