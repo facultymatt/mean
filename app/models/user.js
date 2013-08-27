@@ -36,6 +36,10 @@ UserSchema.virtual('password').set(function(password) {
     return this._password;
 });
 
+UserSchema.virtual('fullName').get(function() {
+    return this.name.first + ' ' + this.name.last;
+});
+
 /**
  * Validations
  */
