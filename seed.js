@@ -1,4 +1,12 @@
 /**
+* Module to seed a database.
+* 
+* @todo re-write to use async to reduce the nested function, and quit on completion
+* @todo make model loading more effecient
+*
+*/
+
+/**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
@@ -107,4 +115,3 @@ var doSeed = function() {
     });
     
 }
-
