@@ -12,7 +12,10 @@ var mongoose = require('mongoose'),
  * User Schema
  */
 var UserSchema = new Schema({
-    name: String,
+    name: {
+        first: {type: String, default: '', trim: true},
+        last: {type: String, default: '', trim: true}
+    },
     email: String,
     username: String,
     provider: String,
@@ -22,8 +25,14 @@ var UserSchema = new Schema({
     twitter: {},
     github: {},
     google: {},
-    role: String
+    role: String,
+    phoneNumber: String,
+    avatar: {
+        original: {type: String, default: '', trim: true}
+    },
+    status: {type: String, default: 'Active', trim: true}
 });
+
 
 /**
  * Virtuals
@@ -48,11 +57,13 @@ var validatePresenceOf = function(value) {
 };
 
 // the below 4 validations only apply if you are signing up traditionally
-UserSchema.path('name').validate(function(name) {
-    // if you are authenticating by any of the oauth strategies, don't validate
-    if (authTypes.indexOf(this.provider) !== -1) return true;
+UserSchema.path('name.first').validate(function(name) {
     return name.length;
-}, 'Name cannot be blank');
+}, 'First name cannot be blank');
+
+UserSchema.path('name.last').validate(function(name) {
+    return name.length;
+}, 'Last name cannot be blank');
 
 UserSchema.path('email').validate(function(email) {
     // if you are authenticating by any of the oauth strategies, don't validate
