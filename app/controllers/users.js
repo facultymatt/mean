@@ -69,7 +69,7 @@ exports.session = function(req, res) {
 exports.create = function(req, res) {
     
     
-    var theUser = new Quote(req.body);
+    var theUser = new User(req.body);
 
     theUser.save();
     res.ok(theUser);
