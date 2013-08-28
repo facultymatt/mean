@@ -23,7 +23,7 @@ module.exports = function(app, config, passport, user) {
     *
     */
     user.use(function (req) {
-      if (req.user.role === 'admin') {
+      if (req.user.role === 'admin' || req.user.role ==='gremlin') {
         return true;
       }
     });
