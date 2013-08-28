@@ -77,7 +77,6 @@ exports.create = function(req, res) {
         } else {
            res.ok(theUser); 
         }
-        
     });
     
     
@@ -141,7 +140,7 @@ exports.user = function(req, res, next, id) {
         })
         .exec(function(err, theUser) {
             if (err) return next(err);
-            if (!theUser) return next(new Error('Failed to load User ' + id));
+            if (!theUser) return res.failure('Failed to load User ' + id);
             req.theUser = theUser;
             next();
         });
