@@ -134,20 +134,21 @@ module.exports = function(app, config, passport, user) {
     user.setFailureHandler(function (req, res, action){
       var accept = req.headers.accept || '';
       
-      res.status(403);
-      if (~accept.indexOf('html')) {
-        res.render('access-denied', {action: action});
-      } else {
+      //res.status(403);
+      //if (~accept.indexOf('html')) {
+      // res.send('access-denied', {action: action});
+      //} else {
         
         var requestObj = {
             meta: {
                 status: 'error',
-                message: 'Access Denied - You don\'t have permission to: ' + action
+                message: 'Access Denied - You don\'t have permission to do this action',
+                debug: action
             }
         };
       
         res.json(requestObj, 401);
-      }
+      //}
     });
 
 
