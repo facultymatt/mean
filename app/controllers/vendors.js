@@ -15,7 +15,7 @@ exports.vendor = function(req, res, next, id) {
     Vendor.load(id, function(err, vendor) {
         if (err) return next(err);
         if (!vendor) {
-            return res.json('No results', 404);
+            return res.failure('No results', 404);
         }
         req.vendor = vendor;
         next();
@@ -29,7 +29,7 @@ exports.create = function(req, res) {
     var vendor = new Vendor(req.body);
 
     vendor.save();
-    res.jsonp(vendor);
+    res.ok(vendor);
 };
 
 /**
@@ -41,7 +41,7 @@ exports.update = function(req, res) {
     vendor = _.extend(vendor, req.body);
 
     vendor.save(function(err) {
-        res.jsonp(vendor);
+        res.ok(vendor);
     });
 };
 
@@ -53,11 +53,9 @@ exports.destroy = function(req, res) {
 
     vendor.remove(function(err) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(vendor);
+            res.ok(vendor);
         }
     });
 };
@@ -83,11 +81,9 @@ exports.allForSalesRep = function(req, res) {
         .populate('salesRep')
         .exec(function(err, vendors) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(vendors);
+            res.ok(vendors);
         }
     });
     
@@ -100,11 +96,24 @@ exports.allForSalesRep = function(req, res) {
 exports.all = function(req, res) {
     Vendor.find().sort('-created').populate('programIds').populate('salesRep').exec(function(err, vendors) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(vendors);
+            res.ok(vendors);
+        }
+    });
+};
+
+
+
+/**
+ * List of Vendors
+ */
+exports.getAllNames = function(req, res) {
+    Vendor.find().select('_id name').sort('-created').populate('programIds').populate('salesRep').exec(function(err, vendors) {
+        if (err) {
+            res.failure(err);
+        } else {
+            res.ok(vendors);
         }
     });
 };
