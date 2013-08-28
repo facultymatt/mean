@@ -65,14 +65,14 @@ module.exports = function(app, passport, auth, user) {
 	* -------------------------
 	*/
     var users = require('../app/controllers/users');
-    app.post('/auth/login', function(req, res, next) {
+    app.post('/api/v1/auth/login', function(req, res, next) {
         // here we fun a function which calls another function... this gives us access to req, res, and next
         // however there must be a cleaner way to do this
         // @todo refactor
         users.signin(req, res, next, passport); 
     });
-    app.get('/auth/logout', users.signout);
-    app.post('/auth/logout', users.signout); // makes testing easier with postman
+    app.get('/api/v1/auth/logout', users.signout);
+    app.post('/api/v1/auth/logout', users.signout); // makes testing easier with postman
 
     
     /**
@@ -80,14 +80,14 @@ module.exports = function(app, passport, auth, user) {
 	* -------------------------
 	*/
 	//var users = require('../app/controllers/users');
-    app.get('/users', user.is('admin'), users.all);
-    app.post('/users', user.is('admin'), users.create);
-    app.get('/users/:userId', user.can('view user'), users.show); // @todo check for vendor, is this their approved sales rep? 
-    app.put('/users/:userId', user.can('edit user'), users.update); // sales rep and vendor = edit their own info
-    app.del('/users/:userId', user.can('delete user'), users.destroy);
+    app.get('/api/v1/users', user.is('admin'), users.all);
+    app.post('/api/v1/users', user.is('admin'), users.create);
+    app.get('/api/v1/users/:userId', user.can('view user'), users.show); // @todo check for vendor, is this their approved sales rep? 
+    app.put('/api/v1/users/:userId', user.can('edit user'), users.update); // sales rep and vendor = edit their own info
+    app.del('/api/v1/users/:userId', user.can('delete user'), users.destroy);
 
     // update usre role
-    app.put('/users/:userId/role', user.is('admin'), users.updateRole);
+    app.put('/api/v1/users/:userId/role', user.is('admin'), users.updateRole);
 
     app.param('userId', users.user);
     
@@ -100,7 +100,7 @@ module.exports = function(app, passport, auth, user) {
 	var quotes = require('../app/controllers/quotes');
     //app.get('/quotes', user.is('logged in'), quotes.all);
     
-    app.get('/quotes', user.is('logged in'), function(req, res, next) {
+    app.get('/api/v1/quotes', user.is('logged in'), function(req, res, next) {
             
         if(req.user.role === 'admin') {
             quotes.all(req, res, next);
@@ -114,10 +114,10 @@ module.exports = function(app, passport, auth, user) {
         
     });
     
-    app.post('/quotes', quotes.create);
-    app.get('/quotes/:quoteId', quotes.show);
-    app.put('/quotes/:quoteId', quotes.update);
-    app.del('/quotes/:quoteId', user.is('admin'), quotes.destroy);
+    app.post('/api/v1/quotes', quotes.create);
+    app.get('/api/v1/quotes/:quoteId', quotes.show);
+    app.put('/api/v1/quotes/:quoteId', quotes.update);
+    app.del('/api/v1/quotes/:quoteId', user.is('admin'), quotes.destroy);
 
     app.param('quoteId', quotes.quote);
     
@@ -129,7 +129,7 @@ module.exports = function(app, passport, auth, user) {
 	var applications = require('../app/controllers/applications');
     //app.get('/applications', user.is('admin'), user.is('salesRep'), user.is('vendor'), applications.all);
     
-    app.get('/applications', user.is('logged in'), function(req, res, next) {
+    app.get('/api/v1/applications', user.is('logged in'), function(req, res, next) {
             
         if(req.user.role === 'admin') {
             applications.all(req, res, next);
@@ -141,10 +141,10 @@ module.exports = function(app, passport, auth, user) {
         
     });
     
-    app.post('/applications', applications.create);
-    app.get('/applications/:applicationId', applications.show);
-    app.put('/applications/:applicationId', applications.update);
-    app.del('/applications/:applicationId', user.is('admin'), applications.destroy);
+    app.post('/api/v1/applications', applications.create);
+    app.get('/api/v1/applications/:applicationId', applications.show);
+    app.put('/api/v1/applications/:applicationId', applications.update);
+    app.del('/api/v1/applications/:applicationId', user.is('admin'), applications.destroy);
 
     app.param('applicationId', applications.application);
 
@@ -157,7 +157,7 @@ module.exports = function(app, passport, auth, user) {
 	var vendors = require('../app/controllers/vendors');
     //app.get('/vendors', user.is('admin'), vendors.all);
     // show all vendors, or just users vendors based on role
-    app.get('/vendors', user.is('logged in'), function(req, res, next) {
+    app.get('/api/v1/vendors', user.is('logged in'), function(req, res, next) {
             
         if(req.user.role === 'admin') {
             vendors.all(req, res, next);
@@ -169,10 +169,10 @@ module.exports = function(app, passport, auth, user) {
         
     });
     
-    app.post('/vendors', user.is('admin'), vendors.create);
-    app.get('/vendors/:vendorId', vendors.show);
-    app.put('/vendors/:vendorId', user.is('admin'), vendors.update);
-    app.del('/vendors/:vendorId', user.is('admin'), vendors.destroy);
+    app.post('/api/v1/vendors', user.is('admin'), vendors.create);
+    app.get('/api/v1/vendors/:vendorId', vendors.show);
+    app.put('/api/v1/vendors/:vendorId', user.is('admin'), vendors.update);
+    app.del('/api/v1/vendors/:vendorId', user.is('admin'), vendors.destroy);
 
     app.param('vendorId', vendors.vendor);
     
@@ -189,11 +189,11 @@ module.exports = function(app, passport, auth, user) {
 	* 
 	*/
 	var programs = require('../app/controllers/programs');
-    app.get('/programs', user.is('logged in'), programs.all);
-    app.post('/programs', user.is('admin'), programs.create);
-    app.get('/programs/:programId', programs.show);
-    app.put('/programs/:programId', user.is('admin'), programs.update);
-    app.del('/programs/:programId', user.is('admin'), programs.destroy);
+    app.get('/api/v1/programs', user.is('logged in'), programs.all);
+    app.post('/api/v1/programs', user.is('admin'), programs.create);
+    app.get('/api/v1/programs/:programId', programs.show);
+    app.put('/api/v1/programs/:programId', user.is('admin'), programs.update);
+    app.del('/api/v1/programs/:programId', user.is('admin'), programs.destroy);
 
     app.param('programId', programs.program);
     
