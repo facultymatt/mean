@@ -28,7 +28,7 @@ exports.create = function(req, res) {
     var application = new Application(req.body);
 
     application.save();
-    res.jsonp(application);
+    res.ok(application);
 };
 
 /**
@@ -40,7 +40,7 @@ exports.update = function(req, res) {
     application = _.extend(application, req.body);
 
     application.save(function(err) {
-        res.jsonp(application);
+        res.ok(application);
     });
 };
 
@@ -52,11 +52,9 @@ exports.destroy = function(req, res) {
 
     application.remove(function(err) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.faulure(err);
         } else {
-            res.jsonp(application);
+            res.ok(application);
         }
     });
 };
@@ -65,7 +63,7 @@ exports.destroy = function(req, res) {
  * Show an application
  */
 exports.show = function(req, res) {
-    res.jsonp(req.application);
+    res.ok(req.application);
 };
 
 /**
@@ -74,11 +72,9 @@ exports.show = function(req, res) {
 exports.all = function(req, res) {
     Application.find().sort('-created').exec(function(err, applications) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(applications);
+            res.ok(applications);
         }
     });
 };
@@ -101,7 +97,7 @@ exports.getAllForSalesRep = function(req, res) {
     .select('_id')
     .exec(function(err, vendors) {
         if (err) {
-            res.send(500);
+            res.failure(err, 500);
         } else {
     
             // extract the vendor ids from the results
@@ -126,14 +122,17 @@ exports.getAllForSalesRep = function(req, res) {
         .sort('-created')
         .exec(function(err, quotes) {
             if (err) {
-                 res.send(500);
+                 res.failure(err);
             } else {
-                res.ok({
+                 res.ok(quotes);
+                 /*
+res.ok({
                     meta: {
                         message: 'Getting applications for salesRep ' + req.user.fullName,
                     },
                     results: quotes
                 });
+*/
             }
         });
     }

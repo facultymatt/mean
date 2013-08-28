@@ -23,8 +23,21 @@ module.exports = function(app, config, passport, user) {
     *
     */
     app.use(function(req, res, next) {
-        res.ok = function(status) {
-            res.json(status, 200);
+        res.ok = function(data, message) {
+            
+            // create default response object
+            var resultObj =  {
+                meta: {
+                    code: 200
+                },
+                result: data
+            }
+            
+            // optionally add a message
+            if(message) resultObj.meta.message = message;
+            
+            // respond, ending this request
+            res.json(resultObj, 200);
         }
         
         res.failure = function(message, code) {

@@ -14,7 +14,7 @@ exports.program = function(req, res, next, id) {
 
     Program.load(id, function(err, program) {
         if (err) return next(err);
-        if (!program) return next(new Error('Failed to load program ' + id));
+        if (!program) return res.failure('Failed to load program ' + id, 404);
         req.program = program;
         next();
     });
@@ -27,7 +27,7 @@ exports.create = function(req, res) {
     var program = new Program(req.body);
 
     program.save();
-    res.jsonp(program);
+    res.ok(program);
 };
 
 /**
@@ -39,7 +39,7 @@ exports.update = function(req, res) {
     program = _.extend(program, req.body);
 
     program.save(function(err) {
-        res.jsonp(program);
+        res.ok(program);
     });
 };
 
@@ -51,11 +51,9 @@ exports.destroy = function(req, res) {
 
     program.remove(function(err) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(program);
+            res.ok(program);
         }
     });
 };
@@ -64,7 +62,7 @@ exports.destroy = function(req, res) {
  * Show an program
  */
 exports.show = function(req, res) {
-    res.jsonp(req.program);
+    res.ok(req.program);
 };
 
 /**
@@ -73,11 +71,9 @@ exports.show = function(req, res) {
 exports.all = function(req, res) {
     Program.find().sort('-created').exec(function(err, programs) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.faulure(error);
         } else {
-            res.jsonp(programs);
+            res.ok(programs);
         }
     });
 };

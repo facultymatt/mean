@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
 exports.quote = function(req, res, next, id) {
     Quote.load(id, function(err, quote) {
         if (err) return next(err);
-        if (!quote) return next(new Error('Failed to load quote ' + id));
+        if (!quote) return res.failure('Failed to load quote ' + id, 404);
         req.quote = quote;
         next();
     });
@@ -28,7 +28,7 @@ exports.create = function(req, res) {
     var quote = new Quote(req.body);
 
     quote.save();
-    res.jsonp(quote);
+    res.ok(quote);
 };
 
 
@@ -41,7 +41,7 @@ exports.update = function(req, res) {
     quote = _.extend(quote, req.body);
 
     quote.save(function(err) {
-        res.jsonp(quote);
+        res.ok(quote);
     });
 };
 
@@ -54,11 +54,9 @@ exports.destroy = function(req, res) {
 
     quote.remove(function(err) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(quote);
+            res.ok(quote);
         }
     });
 };
@@ -68,7 +66,7 @@ exports.destroy = function(req, res) {
  * Show an quote
  */
 exports.show = function(req, res) {
-    res.jsonp(req.quote);
+    res.ok(req.quote);
 };
 
 
@@ -78,11 +76,9 @@ exports.show = function(req, res) {
 exports.all = function(req, res) {
     Quote.find().sort('-created').exec(function(err, quotes) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(quotes);
+            res.ok(quotes);
         }
     });
 };
@@ -105,7 +101,7 @@ exports.getAllForSalesRep = function(req, res) {
     .select('_id')
     .exec(function(err, vendors) {
         if (err) {
-            res.send(500);
+            res.failure(err);
         } else {
     
             // extract the vendor ids from the results
@@ -130,16 +126,9 @@ exports.getAllForSalesRep = function(req, res) {
         .sort('-created')
         .exec(function(err, quotes) {
             if (err) {
-                 res.send(500);
+                 res.failure(err);
             } else {
-                res.json({
-                    
-                    meta: {
-                        message: 'Getting quotes for salesRep ' + req.user.fullName  
-                    },
-                    results: quotes
-                    
-                });
+               res.ok(quotes, 'Getting quotes for salesRep ' + req.user.fullName);
             }
         });
     }

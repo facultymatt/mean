@@ -25,10 +25,10 @@ exports.signin = function(req, res, next, passport) {
         console.log(info);
         
         if (err) { return next(err); }
-        if (!user) { return res.json({message: 'Problem logging you in: ' + info.message}, 401); }
+        if (!user) { return res.failure('Problem logging you in: ' + info.message, 401); }
         req.logIn(user, function(err) {
           if (err) { return next(err); }
-          res.json(user);
+          res.ok(user);
         });
     })(req, res, next);
 
@@ -51,7 +51,7 @@ exports.signup = function(req, res) {
  */
 exports.signout = function(req, res) {
     req.logout();
-    res.json({meta: {message: 'success, you are now logged out!'}});
+    res.ok('success, you are now logged out!');
 };
 
 /**
@@ -72,7 +72,7 @@ exports.create = function(req, res) {
     var theUser = new Quote(req.body);
 
     theUser.save();
-    res.jsonp(theUser);
+    res.ok(theUser);
     
     /*
     var theUser = new User(req.body);
@@ -114,14 +114,14 @@ exports.show = function(req, res) {
     
     
     
-    res.jsonp(req.theUser);
+    res.ok(req.theUser);
 };
 
 /**
  * Send User
  */
 exports.me = function(req, res) {
-    res.jsonp(req.theUser || null);
+    res.ok(req.theUser || null);
 };
 
 /**
@@ -150,11 +150,9 @@ exports.destroy = function(req, res) {
 
     theUser.remove(function(err) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(theUser);
+            res.ok(theUser);
         }
     });
 };
@@ -165,11 +163,9 @@ exports.destroy = function(req, res) {
 exports.all = function(req, res) {
     User.find().sort('-created').populate('programIds').exec(function(err, users) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            res.failure(err);
         } else {
-            res.jsonp(users);
+            res.ok(users);
         }
     });
 };
@@ -188,7 +184,7 @@ exports.update = function(req, res) {
     theUser = _.extend(theUser, req.body);
 
     theUser.save(function(err) {
-        res.jsonp(theUser);
+        res.ok(theUser);
     });
 };
 
@@ -206,7 +202,7 @@ exports.updateRole = function(req, res) {
         if (err) return next(err); 
         doc.role = newRole;
         doc.save(function() {
-            res.json(doc);
+            res.ok(doc);
         });
     })
 };
