@@ -43,10 +43,24 @@ module.exports = function(app, config, passport, user) {
         res.failure = function(message, code) {
             var code = code || 500;
             
-            res.json({meta: { 
-                message: message,
-                code: code
-            }}, code);
+            // create default template
+            var responseObj = {
+                meta: { 
+                    code: code,
+                    message: message
+                }
+            }
+            
+            // add the message. We check if "message" key is already set
+            // because in some cases, such as validation failure, a detailed message object is already 
+            // returned, so we don't want message.message as part of our return
+            
+            if(typeof message === 'object' && message.message) {
+               responseObj.meta = message;
+               responseObj.meta.code = code;
+            }
+            
+            res.json(responseObj, code);
         }
         
         next();
