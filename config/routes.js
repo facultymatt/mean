@@ -71,10 +71,16 @@ module.exports = function(app, passport, auth, user) {
     app.get('/auth/logout', users.signout);
     app.post('/auth/logout', users.signout); // makes testing easier with postman
 
+    
+    /**
+	* USERS / GENERAL routes
+	* -------------------------
+	*/
+	//var users = require('../app/controllers/users');
     app.get('/users', user.is('admin'), users.all);
     app.post('/users', user.is('admin'), users.create);
-    app.get('/users/:userId', user.can('view user'), users.show);
-    app.put('/users/:userId', user.can('edit user'), users.update);
+    app.get('/users/:userId', user.can('view user'), users.show); // @todo check for vendor, is this their approved sales rep? 
+    app.put('/users/:userId', user.can('edit user'), users.update); // sales rep and vendor = edit their own info
     app.del('/users/:userId', user.can('delete user'), users.destroy);
 
     app.param('userId', users.user);
@@ -92,6 +98,8 @@ module.exports = function(app, passport, auth, user) {
         if(req.user.role === 'admin') {
             quotes.all(req, res, next);
         } else if(req.user.role === 'salesRep') {
+            
+            // @todo support all for vendor
             quotes.getAllForSalesRep(req, res, next);
         } else {
             res.send('Not found', 404);
@@ -137,6 +145,7 @@ module.exports = function(app, passport, auth, user) {
 	/**
 	* VENDORS routes
 	* -------------------------
+	*
 	*/
 	var vendors = require('../app/controllers/vendors');
     //app.get('/vendors', user.is('admin'), vendors.all);
@@ -153,7 +162,6 @@ module.exports = function(app, passport, auth, user) {
         
     });
     
-    app.use('/vendors', user.is('not admin'), vendors.all);
     app.post('/vendors', user.is('admin'), vendors.create);
     app.get('/vendors/:vendorId', vendors.show);
     app.put('/vendors/:vendorId', user.is('admin'), vendors.update);
@@ -165,13 +173,20 @@ module.exports = function(app, passport, auth, user) {
     /**
 	* PROGRAMS routes
 	* -------------------------
+	*
+	* Current Rules
+	* - Logged in = view all programs, view single program
+	* - Admin = CRUD programs
+	* 
+	* @todo vendors should only be able to view their programs
+	* 
 	*/
 	var programs = require('../app/controllers/programs');
     app.get('/programs', user.is('logged in'), programs.all);
     app.post('/programs', user.is('admin'), programs.create);
-    app.get('/programs/:programId', user.is('admin'), user.can('edit programs'), programs.show);
+    app.get('/programs/:programId', programs.show);
     app.put('/programs/:programId', user.is('admin'), programs.update);
-    app.del('/programs/:programId', user.is('admin'), user.can('delete programs'), programs.destroy);
+    app.del('/programs/:programId', user.is('admin'), programs.destroy);
 
     app.param('programId', programs.program);
     
@@ -180,10 +195,13 @@ module.exports = function(app, passport, auth, user) {
 	* DEV / TESTING routes
 	* -------------------------
 	*/
-    app.get('/private', user.can('view all programs'), function(req, res) {
+    /*
+app.get('/private', user.can('view all programs'), function(req, res) {
         res.send('OK PRIVATE...!');
     });
-    
+*/
+   /*
+ 
     app.get('/fancy',
       // Authenticate using HTTP Basic credentials, with session support disabled.
       passport.authenticate('local'),
@@ -194,6 +212,15 @@ module.exports = function(app, passport, auth, user) {
     app.get('/out', function(req, res) {
         req.logout();
         res.json({meta: {message: 'success, you are now logged out!'}});
+    });
+    
+*/
+    
+    
+    
+    // Catch all for non-existant routes
+    app.all('*', function(req, res, next) {
+        res.failure('Resource not found', 404);
     });
     
 };
