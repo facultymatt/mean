@@ -7,50 +7,73 @@ var mongoose = require('mongoose'),
 /**
  * Auth callback
  */
+/*
 exports.authCallback = function(req, res, next) {
     res.redirect('/');
 };
+*/
 
 /**
  * Show login form
  */
-exports.signin = function(req, res) {
-    res.render('users/signin', {
-        title: 'Signin',
-        message: req.flash('error')
-    });
+exports.signin = function(req, res, next, passport) {
+
+    passport.authenticate('local', function(err, user, info) {
+        
+        console.log(info);
+        
+        if (err) { return next(err); }
+        if (!user) { return res.json({message: 'Problem logging you in: ' + info.message}, 401); }
+        req.logIn(user, function(err) {
+          if (err) { return next(err); }
+          res.json(user);
+        });
+    })(req, res, next);
+
 };
 
 /**
  * Show sign up form
  */
+/*
 exports.signup = function(req, res) {
     res.render('users/signup', {
         title: 'Sign up',
         user: new User()
     });
 };
+*/
 
 /**
  * Logout
  */
 exports.signout = function(req, res) {
     req.logout();
-    res.redirect('/');
+    res.json({meta: {message: 'success, you are now logged out!'}});
 };
 
 /**
  * Session
  */
+/*
 exports.session = function(req, res) {
     res.redirect('/');
 };
+*/
 
 /**
  * Create user
  */
 exports.create = function(req, res) {
-    var theUser = new User(req.body);
+    
+    
+    var theUser = new Quote(req.body);
+
+    theUser.save();
+    res.jsonp(theUser);
+    
+    /*
+var theUser = new User(req.body);
 
     theUser.provider = 'local';
     theUser.save(function(err) {
@@ -65,6 +88,7 @@ exports.create = function(req, res) {
             return res.redirect('/');
         });
     });
+*/
 };
 
 /**

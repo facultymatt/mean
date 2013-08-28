@@ -56,11 +56,21 @@ module.exports = function(app, passport, auth, user) {
     app.param('userId', users.user);
 */
     
+    
     /**
-	* USERS routes
+	* USERS / AUTH routes
 	* -------------------------
 	*/
-	var users = require('../app/controllers/users');
+    var users = require('../app/controllers/users');
+    app.post('/auth/login', function(req, res, next) {
+        // here we fun a function which calls another function... this gives us access to req, res, and next
+        // however there must be a cleaner way to do this
+        // @todo refactor
+        users.signin(req, res, next, passport); 
+    });
+    app.get('/auth/logout', users.signout);
+    app.post('/auth/logout', users.signout); // makes testing easier with postman
+
     app.get('/users', user.is('admin'), users.all);
     app.post('/users', user.is('admin'), users.create);
     app.get('/users/:userId', user.can('view user'), users.show);
