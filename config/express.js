@@ -17,7 +17,7 @@ module.exports = function(app, config, passport, user) {
         level: 9
     }));
     
-    
+
     /**
     * Extend res with custom response formats, that we can use in our controllers. 
     *
@@ -116,36 +116,41 @@ module.exports = function(app, config, passport, user) {
         app.use(user);
         
 
-        //routes should be at the last
+        // routes should be at the last
         app.use(app.router);
         
         
-        
-/*
+        app.all('/', function(req, res, next) {
+            res.ok('Hello world!');
+        });
         
 
-        //Assume "not found" in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
+        // Assume "not found" in the error msgs is a 404. 
+        // this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
         app.use(function(err, req, res, next) {
+            
+            if(err.message.indexOf('CastError')) {
+                // respond with 'bad request' ie: this will never work
+                // dont try this request again! 
+                return res.failure('Invalid object id.', 400); 
+            }
+            
             //Treat as 404
-            if (~err.message.indexOf('not found')) return next();
-
+            if (~err.message.indexOf('not found')) {
+                console.log('NOT FOUND....!!!!'); // debug to figure out when this is happening
+                return next();
+            }
+            
             //Log it
             console.error(err.stack);
 
-            //Error page
-            res.status(500).render('500', {
-                error: err.stack
-            });
+            res.failure('Error! ' + err);
         });
 
-        //Assume 404 since no middleware responded
+        // Assume 404 since no middleware responded
         app.use(function(req, res, next) {
-            res.status(404).render('404', {
-                url: req.originalUrl,
-                error: 'Not found'
-            });
+            res.failure('Not found', 404);
         });
-*/
         
         
 

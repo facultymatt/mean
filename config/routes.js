@@ -57,6 +57,9 @@ module.exports = function(app, passport, auth, user) {
 */
     
     
+
+    
+    
     /**
 	* USERS / AUTH routes
 	* -------------------------
@@ -223,8 +226,10 @@ app.get('/private', user.can('view all programs'), function(req, res) {
     
     
     // Catch all for non-existant routes
+/*
     app.all('*', function(req, res, next) {
         res.failure('Resource not found', 404);
     });
+*/
     
 };
