@@ -2,7 +2,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    User = mongoose.model('User');
+    async = require('async'),
+    User = mongoose.model('User'),
+    _ = require('underscore');
 
 /**
  * Auth callback
@@ -73,7 +75,7 @@ exports.create = function(req, res) {
     res.jsonp(theUser);
     
     /*
-var theUser = new User(req.body);
+    var theUser = new User(req.body);
 
     theUser.provider = 'local';
     theUser.save(function(err) {
@@ -178,6 +180,11 @@ exports.all = function(req, res) {
 exports.update = function(req, res) {
     var theUser = req.theUser;
 
+    // we don't want anyone updating roles from here... 
+    // this is because users can update them selves
+    // note we should also remove other things here, like password, etc. 
+    delete req.body.role;
+    
     theUser = _.extend(theUser, req.body);
 
     theUser.save(function(err) {
@@ -185,5 +192,23 @@ exports.update = function(req, res) {
     });
 };
 
+
+/**
+ * Update a user role
+ * @note this will only update a user role! no other data even if its passed. 
+ *
+ */
+exports.updateRole = function(req, res) {
+    var newRole = req.body.role;
+    var userId = req.theUser._id;
+
+    User.findById(userId, function (err, doc) {
+        if (err) return next(err); 
+        doc.role = newRole;
+        doc.save(function() {
+            res.json(doc);
+        });
+    })
+};
 
 

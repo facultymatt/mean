@@ -83,7 +83,11 @@ module.exports = function(app, passport, auth, user) {
     app.put('/users/:userId', user.can('edit user'), users.update); // sales rep and vendor = edit their own info
     app.del('/users/:userId', user.can('delete user'), users.destroy);
 
+    // update usre role
+    app.put('/users/:userId/role', user.is('admin'), users.updateRole);
+
     app.param('userId', users.user);
+    
     
     
     /**

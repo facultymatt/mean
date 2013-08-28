@@ -25,7 +25,7 @@ var UserSchema = new Schema({
     twitter: {},
     github: {},
     google: {},
-    role: String,
+    role: {type: String, default: 'salesRep', trim: true},
     phoneNumber: String,
     avatar: {
         original: {type: String, default: '', trim: true}
