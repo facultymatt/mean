@@ -85,9 +85,9 @@ module.exports = function(app, config, passport, user) {
     }
 
     //Set views path, template engine and default layout
-    //app.set('views', config.root + '/app/views');
-    //app.set('view engine', 'jade');
-    app.set('views', __dirname + '/views');
+    app.set('views', config.root + '/app/views');
+    app.set('view engine', 'jade');
+    //app.set('views', __dirname + '/views');
 
     //Enable jsonp
     app.enable("jsonp callback");
@@ -139,9 +139,12 @@ module.exports = function(app, config, passport, user) {
         // this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
         app.use(function(err, req, res, next) {
             
-            if(err.message.indexOf('CastError')) {
+            console.log(err);
+            
+            if(~err.message.indexOf('CastError')) {
                 // respond with 'bad request' ie: this will never work
                 // dont try this request again! 
+                console.log(err);
                 return res.failure('Invalid object id.', 400); 
             }
             
