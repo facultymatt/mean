@@ -157,20 +157,17 @@ module.exports = function(app, passport, auth, user) {
 	var vendors = require('../app/controllers/vendors');
     //app.get('/vendors', user.is('admin'), vendors.all);
     // show all vendors, or just users vendors based on role
-    app.get('/api/v1/vendors', user.is('logged in'), function(req, res, next) {
+    app.get('/api/v1/vendors', function(req, res, next) {
             
-        if(req.user.role === 'admin') {
-            vendors.all(req, res, next);
-        } else if(req.user.role === 'salesRep') {
-            vendors.allForSalesRep(req, res, next);
-        } else {
-            res.send('Not found', 404);
-        }
+        if(!req.user.role)                      vendors.getAllNames(req, res, next);
+        else if(req.user.role === 'admin')      vendors.all(req, res, next);
+        else if(req.user.role === 'salesRep')   vendors.allForSalesRep(req, res, next);
+        else                                    res.send('Not found', 404);
         
     });
     
     app.post('/api/v1/vendors', user.is('admin'), vendors.create);
-    app.get('/api/v1/vendors/:vendorId', vendors.show);
+    app.get('/api/v1/vendors/:vendorId', user.is('admin'), vendors.show);
     app.put('/api/v1/vendors/:vendorId', user.is('admin'), vendors.update);
     app.del('/api/v1/vendors/:vendorId', user.is('admin'), vendors.destroy);
 
