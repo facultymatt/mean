@@ -71,8 +71,15 @@ exports.create = function(req, res) {
     
     var theUser = new User(req.body);
 
-    theUser.save();
-    res.ok(theUser);
+    theUser.save(function(err) {
+        if(err) {
+            res.failure(err);
+        } else {
+           res.ok(theUser); 
+        }
+        
+    });
+    
     
     /*
     var theUser = new User(req.body);
