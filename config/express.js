@@ -4,6 +4,7 @@
 var express = require('express'),
     mongoStore = require('connect-mongo')(express),
     flash = require('connect-flash'),
+    path = require('path'),
     helpers = require('view-helpers');
 
 module.exports = function(app, config, passport, user) {
@@ -69,6 +70,14 @@ module.exports = function(app, config, passport, user) {
     //Setting the fav icon and static folder
     app.use(express.favicon());
     app.use(express.static(config.root + '/public'));
+    
+    // PORT from genesis
+    //app.use(express.static(config.root + '/build'));
+    //app.use("/downloads", express.static(config.root + '/tmp'));
+    app.use(express.static(path.join(__dirname, '../../build')));
+    app.use("/downloads", express.static(path.join(__dirname, '../../tmp')));
+    
+    // end port
 
     //Don't use logger for test env
     if (process.env.NODE_ENV !== 'test') {
@@ -76,8 +85,9 @@ module.exports = function(app, config, passport, user) {
     }
 
     //Set views path, template engine and default layout
-    app.set('views', config.root + '/app/views');
-    app.set('view engine', 'jade');
+    //app.set('views', config.root + '/app/views');
+    //app.set('view engine', 'jade');
+    app.set('views', __dirname + '/views');
 
     //Enable jsonp
     app.enable("jsonp callback");
@@ -120,10 +130,10 @@ module.exports = function(app, config, passport, user) {
         app.use(app.router);
         
         
-        app.all('/', function(req, res, next) {
+        // welcome message for API
+        app.all('/api', function(req, res, next) {
             res.ok('Hello world!');
         });
-        
 
         // Assume "not found" in the error msgs is a 404. 
         // this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
@@ -145,14 +155,33 @@ module.exports = function(app, config, passport, user) {
             console.error(err.stack);
 
             res.failure('Error! ' + err);
+            
+            next(); // needed or the calls below will never happen
         });
 
-        // Assume 404 since no middleware responded
+        
+        // catch all for api endpoints
+        // that are not offical. They get a not found response
+        // 
+        // @note that by putting app.all() inside app.use() we ensure its run after
+        //       the regular routing. if we just called app.all() it would override all the other routes.
+        //
         app.use(function(req, res, next) {
-            res.failure('Not found', 404);
+            app.all('/api*', function(req, res, next) {
+                return res.failure('Resource not found', 404);
+            });
+            next(); // needed or the calls below will never happen
         });
         
         
+        // catch all for non-api routes
+        // this serves up our main app
+        app.use(function(req, res, next) {
+            app.get('*', function(req, res, next) {
+                //return res.ok('catch all');
+                res.redirect('/#' + req.url);
+            });
+        });
 
     });
 };
