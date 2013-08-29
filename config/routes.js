@@ -88,8 +88,11 @@ module.exports = function(app, passport, auth, user) {
     app.put('/api/v1/users/:userId', user.can('edit user'), users.update); 
     app.del('/api/v1/users/:userId', user.can('delete user'), users.destroy);
 
-    // update usre role
+    // update user role
     app.put('/api/v1/users/:userId/role', user.is('admin'), users.updateRole);
+    
+    // update user password
+    app.put('/api/v1/users/:userId/password', user.can('edit user'), users.updatePassword);
 
     app.param('userId', users.user);
     
