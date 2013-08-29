@@ -82,8 +82,10 @@ module.exports = function(app, passport, auth, user) {
 	//var users = require('../app/controllers/users');
     app.get('/api/v1/users', user.is('admin'), users.all);
     app.post('/api/v1/users', user.is('admin'), users.create);
-    app.get('/api/v1/users/:userId', user.can('view user'), users.show); // @todo check for vendor, is this their approved sales rep? 
-    app.put('/api/v1/users/:userId', user.can('edit user'), users.update); // sales rep and vendor = edit their own info
+    // @todo check for vendor, is this their approved sales rep?
+    app.get('/api/v1/users/:userId', user.can('view user'), users.show);  
+    // sales rep and vendor = edit their own info
+    app.put('/api/v1/users/:userId', user.can('edit user'), users.update); 
     app.del('/api/v1/users/:userId', user.can('delete user'), users.destroy);
 
     // update usre role
