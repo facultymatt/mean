@@ -15,7 +15,7 @@ var QuoteSchema = new Schema({
     totalCost: { type: Number, default: 0 },
     status: {type: String, default: 'Open', trim: true},
     vendorId: {
-    	type: Schema.ObjectId,
+        type: Schema.ObjectId,
         ref: 'Vendor'
     },
     description: {type: String, default: '', trim: true},

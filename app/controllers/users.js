@@ -257,7 +257,5 @@ exports.updateRole = function(req, res) {
         doc.save(function() {
             res.ok(doc);
         });
-    })
+    });
 };
-
-

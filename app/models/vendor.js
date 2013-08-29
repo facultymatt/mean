@@ -19,7 +19,7 @@ var VendorSchema = new Schema({
       "phone": {type: String, default: '', trim: true}
     },
     "salesRep" : {
-    	type: Schema.ObjectId,
+        type: Schema.ObjectId,
         ref: 'User'
     },
     "logo": {
@@ -41,7 +41,7 @@ var VendorSchema = new Schema({
     },
     "locatorEnabled": Boolean,
     "programIds": [{
-    	type: Schema.ObjectId,
+        type: Schema.ObjectId,
         ref: 'Program'
     }],
     "programs": [{

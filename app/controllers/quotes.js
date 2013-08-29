@@ -131,5 +131,5 @@ exports.getAllForSalesRep = function(req, res) {
                res.ok(quotes, 'Getting quotes for salesRep ' + req.user.fullName);
             }
         });
-    }
+    };
 };

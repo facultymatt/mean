@@ -29,12 +29,12 @@ fs.readdirSync(models_path).forEach(function(file) {
 
 
 // Saving in array allows us to call below in doSeed function.
-var models = [];
-models['Quote'] = mongoose.model('Quote');
-models['Application'] = mongoose.model('Application');
-models['User'] = mongoose.model('User');
-models['Vendor'] = mongoose.model('Vendor');
-models['Program'] = mongoose.model('Program');
+var models = {};
+models.Quote = mongoose.model('Quote');
+models.Application = mongoose.model('Application');
+models.User = mongoose.model('User');
+models.Vendor = mongoose.model('Vendor');
+models.Program = mongoose.model('Program');
 
 
 /**
@@ -114,4 +114,4 @@ var doSeed = function() {
 
     });
     
-}
+};

@@ -32,17 +32,17 @@ module.exports = function(app, config, passport, user) {
                     code: 200
                 },
                 result: data
-            }
+            };
             
             // optionally add a message
             if(message) resultObj.meta.message = message;
             
             // respond, ending this request
             res.json(resultObj, 200);
-        }
+        };
         
         res.failure = function(message, code) {
-            var code = code || 500;
+            code = code || 500;
             
             // create default template
             var responseObj = {
@@ -50,7 +50,7 @@ module.exports = function(app, config, passport, user) {
                     code: code,
                     message: message
                 }
-            }
+            };
             
             // add the message. We check if "message" key is already set
             // because in some cases, such as validation failure, a detailed message object is already 
@@ -62,7 +62,7 @@ module.exports = function(app, config, passport, user) {
             }
             
             res.json(responseObj, code);
-        }
+        };
         
         next();
     });
