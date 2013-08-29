@@ -199,6 +199,48 @@ exports.update = function(req, res) {
     });
 };
 
+/**
+ * Update a user password
+ *
+ * @note we are not sending a confirm_password param, this should be done on the front end.
+ * @todo admin should not need to confirm the password!  
+ *
+ * @param current_password {stirng} Current password for user, we authenticate before updating
+ * @param new_password {string} New password for the user
+ *
+ */
+exports.updatePassword = function(req, res) {
+    
+    var theUser = req.theUser;
+    
+    // require new password
+    // @Note we don't need to do this here because when we set the password to be req.body.new_password
+    // below, even its its null there are no errors, and the model validation will handle the null value
+    // Compare this to php, its soooo LEAN! 
+    //if(!req.body.new_password) {
+        //return res.failure('A new password is required');
+    //}
+    
+    if(theUser.authenticate(req.body.current_password)) {
+        
+        // set new password from param
+        // @Note this will be set to null if non-existant
+        theUser.password = req.body.new_password;
+        
+        theUser.save(function(err, newUser) {            
+            if (err) {
+                return res.failure(err); 
+            } else {
+                return res.ok('Password updated!');
+            }
+        });
+        
+    } else {
+        return res.failure('Current password is incorrect', 400);
+    }
+
+};
+
 
 /**
  * Update a user role
