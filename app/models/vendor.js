@@ -47,7 +47,12 @@ var VendorSchema = new Schema({
     "programs": [{
         "_id": Schema.ObjectId,
         "displayName": {type: String, default: '', trim: true}
-    }]
+    }],
+    "customField": {
+        required: {type: Boolean, default: false},
+        enabled: {type: Boolean, default: false},
+        displayName: {type: String, default: '', trim: true}
+    }
 });
 
 /**

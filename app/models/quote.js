@@ -26,6 +26,10 @@ var QuoteSchema = new Schema({
        "city": {type: String, default: '', trim: true},
        "state": {type: String, default: '', trim: true},
        "zip": {type: String, default: '', trim: true}
+    },
+    customField: {
+        displayName: String,
+        value: String
     }
 });
 
