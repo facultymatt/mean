@@ -117,3 +117,28 @@ exports.getAllNames = function(req, res) {
         }
     });
 };
+
+
+/**
+* Get programs for a vendor
+*
+*/
+var Program = mongoose.model('Program');
+
+exports.getCurrentVendorPrograms = function(req, res) {
+     res.ok(req.vendor.programIds);
+};
+
+
+exports.getAvailableVendorPrograms = function(req, res) {
+     var theIds = _.pluck(req.vendor.programIds, '_id');
+     console.log(theIds);
+     Program.find().where('_id').nin(theIds).sort('-created').exec(function(err, programs) {
+        if (err) {
+            res.failure(err);
+        } else {
+            res.ok(programs);
+        }
+    });
+};
+

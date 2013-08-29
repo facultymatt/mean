@@ -175,6 +175,12 @@ module.exports = function(app, passport, auth, user) {
     app.get('/api/v1/vendors/:vendorId', user.is('admin'), vendors.show);
     app.put('/api/v1/vendors/:vendorId', user.is('admin'), vendors.update);
     app.del('/api/v1/vendors/:vendorId', user.is('admin'), vendors.destroy);
+    
+    // get programs for a vendor
+    // @todo replace when we get a proper children setup
+    
+    app.get('/api/v1/vendors/:vendorId/programs', user.is('admin'), vendors.getCurrentVendorPrograms);
+    app.get('/api/v1/vendors/:vendorId/available_programs', user.is('admin'), vendors.getAvailableVendorPrograms);
 
     app.param('vendorId', vendors.vendor);
     
