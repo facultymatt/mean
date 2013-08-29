@@ -187,6 +187,11 @@ exports.update = function(req, res) {
     // note we should also remove other things here, like password, etc. 
     delete req.body.role;
     
+    if(req.body.password) {
+        console.log('deleting password');
+        delete req.body.password;
+    }
+    
     theUser = _.extend(theUser, req.body);
 
     theUser.save(function(err) {
