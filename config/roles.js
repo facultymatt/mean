@@ -17,6 +17,18 @@ module.exports = function(app, config, passport, user) {
       }
     });
 
+    /**
+    * Edit programs
+    *
+    */
+    user.use('edit user', function (req) {
+        // don't do script comparison here because of type = objectId
+        if (req.user.role === 'salesRep' && req.user._id == req.params.userId) {
+            return true;
+        }
+    });
+    
+
     
     /**
     * Admin can access all pages!
@@ -123,6 +135,7 @@ module.exports = function(app, config, passport, user) {
             return true;
         }
     });
+    
     
     
 
