@@ -7,6 +7,13 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 
+/*
+var subProgramSchema = new Schema({
+    type: Schema.ObjectId,
+    ref: 'Program'
+});
+*/
+
 /**
  * Vendor Schema
  */
@@ -40,13 +47,10 @@ var VendorSchema = new Schema({
       "longitude": {type: Number, default: null}
     },
     "locatorEnabled": Boolean,
-    "programIds": [{
-        type: Schema.ObjectId,
-        ref: 'Program'
-    }],
     "programs": [{
-        "_id": Schema.ObjectId,
-        "displayName": {type: String, default: '', trim: true}
+        type: Schema.ObjectId,
+        ref: 'Program',
+        displayName: String
     }],
     "customField": {
         required: {type: Boolean, default: false},
@@ -59,10 +63,14 @@ var VendorSchema = new Schema({
  * Statics
  */
 VendorSchema.statics = {
+    
+    // this gets called when a vendorId is present in the req.params
+    // its a clever way to be able to access req.vendor in the next middlewares
+    //
     load: function(id, cb) {
         this.findOne({
             _id: id
-        }).populate('programIds').populate('salesRep').exec(cb);
+        }).populate('programIds programs salesRep').exec(cb);
     }
 };
 

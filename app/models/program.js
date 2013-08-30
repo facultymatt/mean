@@ -30,6 +30,7 @@ var costsSchema = new Schema({
 var ProgramSchema = new Schema({
     "created": { type: Date, default: Date.now },
     name: {type: String, default: ''},
+    displayName: {type: String, default: '', trim: true},
     rateSheet: {
         termPeriod: {type: String, default: ''},
         buyoutOptions: [buyoutOptionsSchema]

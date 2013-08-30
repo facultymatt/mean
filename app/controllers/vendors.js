@@ -77,8 +77,7 @@ exports.allForSalesRep = function(req, res) {
         .equals(userId)
         .find()
         .sort('-created')
-        .populate('programIds')
-        .populate('salesRep')
+        .populate('programIds programs salesRep')
         .exec(function(err, vendors) {
         if (err) {
             res.failure(err);
@@ -94,7 +93,7 @@ exports.allForSalesRep = function(req, res) {
  * List of Vendors
  */
 exports.all = function(req, res) {
-    Vendor.find().sort('-created').populate('programIds').populate('salesRep').exec(function(err, vendors) {
+    Vendor.find().sort('-created').populate('programIds programs salesRep').exec(function(err, vendors) {
         if (err) {
             res.failure(err);
         } else {
@@ -109,7 +108,7 @@ exports.all = function(req, res) {
  * List of Vendors
  */
 exports.getAllNames = function(req, res) {
-    Vendor.find().select('_id name').sort('-created').populate('programIds').populate('salesRep').exec(function(err, vendors) {
+    Vendor.find().select('_id name').sort('-created').populate('programIds salesRep programs').exec(function(err, vendors) {
         if (err) {
             res.failure(err);
         } else {

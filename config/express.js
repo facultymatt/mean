@@ -139,9 +139,12 @@ module.exports = function(app, config, passport, user) {
         // this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
         app.use(function(err, req, res, next) {
             
+            //Log it
+            console.error(err.stack);
+            
             if(err.message.indexOf('CastError')) {
                 // respond with 'bad request' ie: this will never work
-                // dont try this request again! 
+                // dont try this request again!                 
                 return res.failure('Invalid object id.', 400); 
             }
             
@@ -151,8 +154,7 @@ module.exports = function(app, config, passport, user) {
                 return next();
             }
             
-            //Log it
-            console.error(err.stack);
+            
 
             res.failure('Error! ' + err);
             

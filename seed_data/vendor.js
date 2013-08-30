@@ -31,16 +31,10 @@ var data = [
       "longitude": -118.41526299999998
     },
     "locatorEnabled": true,
-    "programIds": [
+    "programs": [
       '51e71518ed32080ffc000006',
       '51e71518ed32080ffc000007',
       '51e71518ed32080ffc000050'
-    ],
-    "programs": [
-      {
-        "_id": '51e71518ed32080ffc000006',
-        "displayName": "A Custom Display Name for Program 1"
-      }
     ]
   },
   {
@@ -67,15 +61,9 @@ var data = [
       "zip": ""
     },
     "locatorEnabled": true,
-    "programIds": [
+    "programs": [
       '51e71518ed32080ffc000006',
       '51e71518ed32080ffc000007'
-    ],
-    "programs": [
-      {
-        "_id": '51e71518ed32080ffc000006',
-        "displayName": "A Custom Display Name for Program 1"
-      }
     ],
     "geo": {
       "latitude": 34.06269899999999,
@@ -110,15 +98,9 @@ var data = [
       "longitude": -118.41526299999998
     },
     "locatorEnabled": true,
-    "programIds": [
+    "programs": [
       '51e71518ed32080ffc000006',
       '51e71518ed32080ffc000007'
-    ],
-    "programs": [
-      {
-        "_id": '51e71518ed32080ffc000006',
-        "displayName": "A Custom Display Name for Program 1"
-      }
     ]
   },
   {
@@ -149,15 +131,9 @@ var data = [
       "longitude": -118.41526299999998
     },
     "locatorEnabled": true,
-    "programIds": [
+    "programs": [
       '51e71518ed32080ffc000006',
       '51e71518ed32080ffc000007'
-    ],
-    "programs": [
-      {
-        "_id": '51e71518ed32080ffc000006',
-        "displayName": "A Custom Display Name for Program 1"
-      }
     ]
   },
   {
@@ -183,17 +159,11 @@ var data = [
       "state": "SC",
       "zip": "29045"
     },
-    "programIds": [
+    "programs": [
       '51e71518ed32080ffc000006',
       '51e71518ed32080ffc000007'
     ],
     "locatorEnabled": true,
-    "programs": [
-      {
-        "_id": '51e71518ed32080ffc000006',
-        "displayName": "A Custom Display Name for Program 1"
-      }
-    ],
     "geo": {
       "latitude": 33.9379091,
       "longitude": -81.0891279
